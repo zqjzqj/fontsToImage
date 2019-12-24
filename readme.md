@@ -5,4 +5,4 @@
     具体操作可以见测试文件example.go
     
 # example 图片
-![example](raw.githubusercontent.com/zqjzqj/fontsToImage/master/example.png)
+![example](https://raw.githubusercontent.com/zqjzqj/fontsToImage/master/example.png)
