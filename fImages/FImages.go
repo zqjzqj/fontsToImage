@@ -42,40 +42,38 @@ func ColorIsEq(color1 color.Color, color2 color.Color) bool {
 	return false
 }
 
-//边界填充
-//eColor  边界颜色
-func (img *FImages) EdgeFill(xMax, xMin int, eColor color.Color) {
-	//获取边界四个点
-	rect := img.Bounds()
-	for x := xMin; x <= xMax; x++ {
-		for y := rect.Min.Y; y <= rect.Max.Y; y = y + 5 {
-			pColor := img.At(x, y)
-			//遇到边界
-			if ColorIsEq(pColor, eColor) {
-				if ColorIsEq(img.At(x + 1, y), eColor) {
-					continue
+func (img *FImages) EdgeFill(points []image.Point, rightX int) {
+	var x0, y0, x1, y1 float64
+	pLen := len(points)
+	for k, v := range  points {
+		//首尾相连
+		if k + 1 > pLen - 1 {
+			x0, y0, x1, y1 = float64(v.X), float64(v.Y), float64(points[0].X), float64(points[0].Y)
+		} else {
+			x0, y0, x1, y1 = float64(v.X), float64(v.Y), float64(points[k + 1].X), float64(points[k + 1].Y)
+		}
+		//如果线段是水平线或者是右边边界，不做处理
+		if ( y0 == y1 ) || ( rightX == int(x1) && rightX == int(x0) ) {
+			continue
+		} else {
+			dx, dy := (x0 - x1), (y0 - y1)
+
+			//扫描线的范围
+			eps1 := int(math.Abs(dy))
+
+			xIncre := dx / float64(eps1)
+			yIncre := dy / float64(eps1)
+			for k := 0; k <= eps1; k++ {
+				p, q := int(x0 + 0.5), int(y0 + 0.5)
+				for j := p; j <= rightX; j++ {
+					img.Set(j, q, img.GetColorFlip(j, q))
 				}
-				//扫描线往右边填充
-				n := x + 1
-			//	TO:
-				for x1 := n; x1 <= xMax; x1++ {
-					//下一个对称点
-					if ColorIsEq(img.At(x1, y), eColor) && ( !ColorIsEq(img.At(x1 - 1, y), eColor) && !ColorIsEq(img.At(x1 + 1, y), eColor) ) {
-						for cx := x + 1; cx <= xMax; cx++ {
-							img.Set(cx, y, img.GetColorFlip(cx, y))
-						}
-						for cx := x1; cx <= xMax; cx++ {
-							img.Set(cx, y, img.GetColorFlip(cx, y))
-						}
-						break
-					}
-				}
-				//return
+				x0 -= xIncre;
+				y0 -= yIncre;
 			}
 		}
 	}
 }
-
 
 //获取相反色
 func (img *FImages) GetColorFlip(x, y int) color.Color {

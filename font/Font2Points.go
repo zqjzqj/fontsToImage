@@ -26,7 +26,7 @@ type TTGlyph struct {
 }
 
 func (t *TTGlyph) MappingFont(lColor color.RGBA, bColor color.RGBA) *fImages.FImages {
-	img := fImages.NewFImages(image.Rect(t.xMin, -t.yMin + Yc, t.xMax + Xc, -t.yMax - Yc))
+	img := fImages.NewFImages(image.Rect(t.xMin, t.yMin + Yc, t.xMax + Xc, t.yMax - Yc))
 	img.SetBkg(bColor)//设置背景
 	mappingFont(img, t.tPoints, lColor)
 	return img
@@ -87,6 +87,10 @@ func (f2p *Font2Points) ParsePoints() error {
 			f2p.points[name].xMin, _ = strconv.Atoi(xMin)
 			f2p.points[name].yMin, _ = strconv.Atoi(yMin)
 			f2p.points[name].yMax, _ = strconv.Atoi(yMax)
+
+			//坐标系关系 y取反
+			f2p.points[name].yMax = -f2p.points[name].yMax
+			f2p.points[name].yMin = -f2p.points[name].yMin
 			f2p.points[name].tPoints = make([][]image.Point, 0, 8)
 			for _, contour := range em.Nodes("contour") {
 				p2 := make([]image.Point, 0, 20)
@@ -95,7 +99,7 @@ func (f2p *Font2Points) ParsePoints() error {
 					yValue, _ := pt.AttrValue("y")
 					xN, _ := strconv.Atoi(xValue)
 					yN, _ := strconv.Atoi(yValue)
-					p2 = append(p2, image.Point{X:xN, Y:yN})
+					p2 = append(p2, image.Point{X:xN, Y:-yN})
 				}
 				f2p.points[name].tPoints = append(f2p.points[name].tPoints, p2)
 			}
@@ -142,7 +146,7 @@ func mappingFont(img *fImages.FImages, points [][]image.Point, lColor color.RGBA
 	var x1, y1, x2, y2 int
 	for _, point := range points {
 		pointLen := len(point)
-		xMax, xMix := -999999, 999999
+		xMax := -999999
 		for k, v := range point {
 			//最后一个点与第一个点相连接闭合
 			x1, y1 = v.X, v.Y
@@ -150,18 +154,13 @@ func mappingFont(img *fImages.FImages, points [][]image.Point, lColor color.RGBA
 			if x1 > xMax {
 				xMax = x1
 			}
-			if x1 < xMix {
-				xMix = x1
-			}
 			if k >= pointLen - 1 {
 				x2, y2 = point[0].X, point[0].Y
 			} else {
 				x2, y2 = point[k + 1].X, point[k + 1].Y
 			}
-			//由于golang绘图库坐标系不同 所以y坐标轴要取反
-			img.DrawLine(x1, -y1, x2, -y2 , lColor)
+			img.DrawLine(x1, y1, x2, y2 , lColor)
 		}
-		/*Max*/
-		img.EdgeFill(xMax, xMix, lColor)
+		img.EdgeFill(point, xMax)
 	}
 }
