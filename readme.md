@@ -1,8 +1,8 @@
-# golang µÄttx ×ÖÌå´¦Àí¿â
-    fontsToImage ½«ttx×ÖÌå»æ»­³Éµ¥Ò»Í¼Æ¬
+# golang çš„ttx å­—ä½“å¤„ç†åº“
+    fontsToImage å°†ttxå­—ä½“ç»˜ç”»æˆå•ä¸€å›¾ç‰‡
 
-# ·½·¨¼òµ¥½éÉÜ£º
-    ¾ßÌå²Ù×÷¿ÉÒÔ¼û²âÊÔÎÄ¼şexample.go
+# æ–¹æ³•ç®€å•ä»‹ç»ï¼š
+    å…·ä½“æ“ä½œå¯ä»¥è§æµ‹è¯•æ–‡ä»¶example.go
     
-# example Í¼Æ¬
-    ![example](raw.githubusercontent.com/zqjzqj/fontsToImage/master/example.png)
+# example å›¾ç‰‡
+![example](raw.githubusercontent.com/zqjzqj/fontsToImage/master/example.png)
