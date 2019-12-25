@@ -4,5 +4,8 @@
 # 方法简单介绍：
     具体操作可以见测试文件example.go
     
+# 安装
+    go get -u github.com/zqjzqj/fontsToImage
+    
 # example 图片
     ![example](raw.githubusercontent.com/zqjzqj/fontsToImage/master/example.png)

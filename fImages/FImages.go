@@ -56,7 +56,7 @@ func (img *FImages) EdgeFill(points []image.Point, rightX int) {
 		if ( y0 == y1 ) || ( rightX == int(x1) && rightX == int(x0) ) {
 			continue
 		} else {
-			dx, dy := (x0 - x1), (y0 - y1)
+			dx, dy := (x1 - x0), (y1 - y0)
 
 			//扫描线的范围
 			eps1 := int(math.Abs(dy))
@@ -68,8 +68,8 @@ func (img *FImages) EdgeFill(points []image.Point, rightX int) {
 				for j := p; j <= rightX; j++ {
 					img.Set(j, q, img.GetColorFlip(j, q))
 				}
-				x0 -= xIncre;
-				y0 -= yIncre;
+				x0 += xIncre;
+				y0 += yIncre;
 			}
 		}
 	}

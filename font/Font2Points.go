@@ -3,12 +3,13 @@ package font
 import (
 	"errors"
 	"fonts2Image/fImages"
+	"github.com/donnie4w/dom4g"
 	"image"
 	"image/color"
 	"io"
 	"os"
-	"github.com/donnie4w/dom4g"
 	"strconv"
+	"sync"
 )
 
 const(
@@ -127,19 +128,30 @@ func (f2p *Font2Points) MappingOneFont(fCode string, lColor color.RGBA, bColor c
 	return nil, errors.New("没有找到对应的fCode")
 }
 
-//画出文件所有字体
+//画出文件所有字体 同步的 可在回调函数return error来中断执行
 func (f2p *Font2Points) MappingALLFont(lColor color.RGBA, bColor color.RGBA, cFunc func(img *fImages.FImages, glyph *TTGlyph) error ) error {
-	img := fImages.NewFImages(image.Rect(0, 0, 0, 0))
-	img.SetBkg(bColor)//设置背景
-	for _, points := range f2p.GetPoints() {
-		points.MappingFontByImg(img, lColor)
-		img := points.MappingFont(lColor, bColor)
-		err := cFunc(img, points)
+	for _, point := range f2p.GetPoints() {
+		img := point.MappingFont(lColor, bColor)
+		err := cFunc(img, point)
 		if err != nil {
 			return err
 		}
 	}
 	return nil
+}
+
+//画出文件所有字体 开多个协程提升速度
+func (f2p *Font2Points) MappingALLFontAsync(lColor color.RGBA, bColor color.RGBA, cFunc func(img *fImages.FImages, glyph *TTGlyph) ) {
+	wait := sync.WaitGroup{}
+	for _, point := range f2p.GetPoints() {
+		wait.Add(1)
+		go func(p *TTGlyph) {
+			defer wait.Done()
+			img := p.MappingFont(lColor, bColor)
+			cFunc(img, p)
+		}(point)
+	}
+	wait.Wait()
 }
 
 func mappingFont(img *fImages.FImages, points [][]image.Point, lColor color.RGBA) {

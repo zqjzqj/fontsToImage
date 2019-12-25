@@ -14,9 +14,8 @@ func main() {
 		log.Fatal(err)
 	}
 	log.Println("total fonts :", f2p.GetFontLength())
-	f2p.MappingALLFont(color.RGBA{0,0,0, 0}, color.RGBA{255,255,255,255}, func(img *fImages.FImages, glyph *font.TTGlyph) error {
+	f2p.MappingALLFontAsync(color.RGBA{0,0,0, 0}, color.RGBA{255,255,255,255}, func(img *fImages.FImages, glyph *font.TTGlyph) {
 		img.SaveJPG(path.Join("./img", glyph.Name), nil)
-		return nil
 	})
 
 	/*//获取单个字体
