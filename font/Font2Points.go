@@ -3,6 +3,7 @@ package font
 import (
 	"errors"
 	"fonts2Image/fImages"
+	"github.com/disintegration/imaging"
 	"github.com/donnie4w/dom4g"
 	"image"
 	"image/color"
@@ -175,4 +176,7 @@ func mappingFont(img *fImages.FImages, points [][]image.Point, lColor color.RGBA
 		}
 		img.EdgeFill(point, xMax)
 	}
+
+	//这里因为像素填充有部分问题不太好处理 所以填充后缩略图片 ocr可以更精确的识别
+	img.NRGBA = imaging.Resize(img, 40, 0, imaging.Lanczos)
 }

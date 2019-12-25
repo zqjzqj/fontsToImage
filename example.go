@@ -14,13 +14,16 @@ func main() {
 		log.Fatal(err)
 	}
 	log.Println("total fonts :", f2p.GetFontLength())
-	f2p.MappingALLFontAsync(color.RGBA{0,0,0, 0}, color.RGBA{255,255,255,255}, func(img *fImages.FImages, glyph *font.TTGlyph) {
+	f2p.MappingALLFontAsync(color.RGBA{0,0,0, 0}, color.RGBA{255,255,255,255}, func(img *fImages.FImages, glyph *font.TTGlyph)  {
+		log.Println("OK:", glyph.Name)
 		img.SaveJPG(path.Join("./img", glyph.Name), nil)
 	})
 
 	/*//获取单个字体
-	if tt, ok := f2p.GetPoint("unie5e8"); ok {
+	if tt, ok := f2p.GetPoint("unie4c9"); ok {
 		img := tt.MappingFont(color.RGBA{0,0,0,0}, color.RGBA{255,255,255,255})
 		img.SaveJPG("5e8", nil)
+	} else {
+		log.Println("not")
 	}*/
 }

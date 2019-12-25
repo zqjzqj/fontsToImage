@@ -10,11 +10,11 @@ import (
 )
 
 type FImages struct {
-	*image.RGBA
+	*image.NRGBA
 }
 
 func NewFImages(rect image.Rectangle) *FImages {
-	return &FImages{image.NewRGBA(rect)}
+	return &FImages{image.NewNRGBA(rect)}
 }
 
 func (img *FImages) SetBkg(bColor color.RGBA) {
