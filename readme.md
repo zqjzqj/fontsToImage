@@ -1,11 +1,11 @@
-# golang 的ttx 字体处理库
+# golang 的 ttx字体处理绘图库
     fontsToImage 将ttx字体绘画成单一图片
 
-# 方法简单介绍：
-    具体操作可以见测试文件example.go
+# 使用详情
+    具体方法请查看 example.go
     
 # 安装
     go get -u github.com/zqjzqj/fontsToImage
-    
+
 # example 图片
-    ![example](raw.githubusercontent.com/zqjzqj/fontsToImage/master/example.png)
+![example](https://raw.githubusercontent.com/zqjzqj/fontsToImage/master/example.png)
